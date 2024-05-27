@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import pikepdf
 
 
 def is_pdf(file_path: str) -> bool:
-    return os.path.splitext(file_path)[1] == ".pdf"
+    return os.path.splitext(file_path.lower())[1] == ".pdf"
 
 
 def is_pdf_encrypted(file_path: str) -> bool:
@@ -67,17 +67,24 @@ src_file_path = os.environ.get('DOCUMENT_WORKING_PATH')
 pass_file_path = "/usr/src/paperless/scripts/passwords.txt"
 consume_path = "/usr/src/paperless/consume/"
 
-if is_pdf(src_file_path):
-    if is_pdf_encrypted(src_file_path):
-        print("decrypting pdf")
-        unlock_pdf(src_file_path)
-    else:
-        print("not encrypted")
+if src_file_path is None:
+    print("no file path")
+    exit(0)
 
-    if pdf_has_attachments(src_file_path):
-        print("getting attachments")
-        extract_pdf_attachments(src_file_path)
-    else:
-        print("no attachments")
-else:
+if not is_pdf(src_file_path):
     print("not pdf")
+    exit(0)
+
+if is_pdf_encrypted(src_file_path):
+    print("decrypting pdf")
+    unlock_pdf(src_file_path)
+else:
+    print("not encrypted")
+
+if pdf_has_attachments(src_file_path):
+    print("getting attachments")
+    extract_pdf_attachments(src_file_path)
+else:
+    print("no attachments")
+
+
