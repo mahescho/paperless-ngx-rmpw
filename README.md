@@ -5,6 +5,9 @@ Original script:
 
 https://piep.tech/posts/automatic-password-removal-in-paperless-ngx/
 
+Initial author:
+* https://github.com/RobertWalther
+
 Contriburors:
 * https://github.com/daddy32
 * https://github.com/lukasz-lobocki
