@@ -4,6 +4,13 @@ import os
 import pikepdf
 
 
+# Variable definition
+# You may want to adjust the paths to your needs
+src_file_path = os.environ.get('DOCUMENT_WORKING_PATH')
+password_file_path = "/usr/src/paperless/scripts/passwords.txt"
+paperless_consume_path = "/usr/src/paperless/consume/"
+
+
 def is_pdf(file_path: str) -> bool:
     return os.path.splitext(file_path.lower())[1] == ".pdf"
 
@@ -24,7 +31,7 @@ def pdf_has_attachments(file_path: str) -> bool:
         return False
 
 
-def unlock_pdf(file_path: str):
+def unlock_pdf(file_path: str, pass_file_path: str):
     password = None
     print("reading passwords")
     with open(pass_file_path, "r") as f:
@@ -46,7 +53,7 @@ def unlock_pdf(file_path: str):
         print("empty password file")
 
 
-def extract_pdf_attachments(file_path: str):
+def extract_pdf_attachments(file_path: str, consume_path: str):
     with pikepdf.open(file_path) as pdf:
         ats = pdf.attachments
         for atm in ats:
@@ -63,10 +70,8 @@ def extract_pdf_attachments(file_path: str):
             else:
                 print("skipped: ", trg_filename)
 
-src_file_path = os.environ.get('DOCUMENT_WORKING_PATH')
-pass_file_path = "/usr/src/paperless/scripts/passwords.txt"
-consume_path = "/usr/src/paperless/consume/"
 
+# Script execution
 if src_file_path is None:
     print("no file path")
     exit(0)
@@ -77,13 +82,13 @@ if not is_pdf(src_file_path):
 
 if is_pdf_encrypted(src_file_path):
     print("decrypting pdf")
-    unlock_pdf(src_file_path)
+    unlock_pdf(src_file_path, password_file_path)
 else:
     print("not encrypted")
 
 if pdf_has_attachments(src_file_path):
     print("getting attachments")
-    extract_pdf_attachments(src_file_path)
+    extract_pdf_attachments(src_file_path, paperless_consume_path)
 else:
     print("no attachments")
 
