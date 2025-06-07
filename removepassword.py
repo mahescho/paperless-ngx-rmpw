@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Github repo: https://github.com/mahescho/paperless-ngx-rmpw
 
 import os
 import pikepdf
@@ -31,6 +32,11 @@ def unlock_pdf(file_path: str):
         passwords = f.readlines()
     for p in passwords:
         password = p.strip()
+        # remove comments from password
+        if password.startswith("#") or password == "":
+            continue
+        if password.contains(" #"): # remove comments from password line, only if no space before `#`
+            password = password.split(" #")[0].strip()
         try:
             with pikepdf.open(
                 file_path, password=password, allow_overwriting_input=True
