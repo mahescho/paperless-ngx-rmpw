@@ -64,7 +64,7 @@ def extract_pdf_attachments(file_path: str):
                 print("skipped: ", trg_filename)
 
 src_file_path = os.environ.get('DOCUMENT_WORKING_PATH')
-pass_file_path = "/usr/src/paperless/scripts/passwords.txt"
+pass_file_path = os.path.dirname(os.path.realpath(__file__)) + "/passwords.txt"
 consume_path = "/usr/src/paperless/consume/"
 
 if src_file_path is None:
